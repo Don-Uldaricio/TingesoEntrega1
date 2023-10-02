@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 @Service
 public class EstudianteService {
@@ -18,5 +19,9 @@ public class EstudianteService {
 
     public Estudiante findByRut(String rut){
         return estudianteRepository.findByRut(rut);
+    }
+
+    public <S extends Estudiante> S save(S entity) {
+        return estudianteRepository.save(entity);
     }
 }

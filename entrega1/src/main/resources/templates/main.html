@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Página Principal</title>
+    <link th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Bienvenido a TopEducation</h1>
+    <div>
+        <h2>Opciones:</h2>
+        <ul>
+            <li><a class="btn btn-primary" th:href="@{/ingresoEstudiantes}">Ingreso de Estudiantes</a></li>
+            <li><a class="btn btn-info" th:href="@{/ver-cuotas-estudiantes}">Ver Cuotas de Estudiantes</a></li>
+            <li><a class="btn btn-success" th:href="@{/registrar-pagos}">Registrar Pagos</a></li>
+            <li><a class="btn btn-warning" th:href="@{/importar-notas}">Importar Notas</a></li>
+        </ul>
+    </div>
+</div>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
+
