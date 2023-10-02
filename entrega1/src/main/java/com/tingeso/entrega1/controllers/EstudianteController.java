@@ -4,13 +4,12 @@ import com.tingeso.entrega1.services.EstudianteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import com.tingeso.entrega1.entities.Estudiante;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 @RequestMapping
@@ -18,14 +17,19 @@ public class EstudianteController {
     @Autowired
     private EstudianteService estudianteService;
 
-    @GetMapping("/ingresoEstudiantes")
+    @GetMapping("/ingresoEstudiante")
     public String mostrarIngresoEstudiantes(Model model) {
         Estudiante e = new Estudiante();
         model.addAttribute("Estudiante", e);
-        return "ingresoEstudiantes";
+        return "ingresoEstudiante";
 
     }
 
-
+    // En tu controlador
+    @PostMapping("/guardarEstudiante")
+    public String guardarEstudiante(@ModelAttribute Estudiante estudiante) {
+        estudianteService.guardarEstudiante(estudiante);
+        return "redirect:/ingresoEstudiante";
+    }
 
 }

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Data
@@ -19,9 +19,9 @@ public class Estudiante {
     private String rut;
     private String apellidos;
     private String nombres;
-    private Date fechaNacimiento;
+    private String fechaNacimiento;
     private String tipoColegio;
-    private String NombreColegio;
+    private String nombreColegio;
     private Integer egreso;
-    private Float promedioNotas;
+    //private Float promedioNotas;
 }

@@ -13,7 +13,7 @@ public class EstudianteService {
     @Autowired
     EstudianteRepository estudianteRepository;
 
-    public ArrayList<Estudiante> obtenerEstudiantes(){
+    public ArrayList<Estudiante> getEstudiantes(){
         return (ArrayList<Estudiante>) estudianteRepository.findAll();
     }
 
@@ -21,7 +21,5 @@ public class EstudianteService {
         return estudianteRepository.findByRut(rut);
     }
 
-    public <S extends Estudiante> S save(S entity) {
-        return estudianteRepository.save(entity);
-    }
+    public Estudiante guardarEstudiante(Estudiante e) { return estudianteRepository.save(e); }
 }
