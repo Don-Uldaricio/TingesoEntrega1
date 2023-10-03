@@ -28,6 +28,7 @@ public class EstudianteController {
     // En tu controlador
     @PostMapping("/guardarEstudiante")
     public String guardarEstudiante(@ModelAttribute Estudiante estudiante) {
+        estudiante.setPromedioNotas(0f);
         estudianteService.guardarEstudiante(estudiante);
         return "redirect:/ingresoEstudiante";
     }

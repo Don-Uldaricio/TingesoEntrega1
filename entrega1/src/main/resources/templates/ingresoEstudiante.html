@@ -52,32 +52,79 @@
         </div>
 
         <div class="mb-3">
-            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
+            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
             <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" th:field="*{fechaNacimiento}" required>
         </div>
 
-        <div class="mt-5">
+        <div class="mt-4">
             <h3>Datos del colegio</h3>
-            <div>
-                <label for="nombreColegio" class="form-label"></label>
-                <input type="text" class="form-control" id="nombreColegio" name="nombreColegio" placeholder="Nombre Colegio" th:field="*{nombreColegio}" required>
-            </div>
-            <div>
-                <label for="tipoColegio" class="form-label"></label>
-                <select class="form-select" id="tipoColegio" name="tipoColegio" th:field="*{tipoColegio}" required>
-                    <option value="Municipal">Municipal</option>
-                    <option value="Subvencionado">Subvencionado</option>
-                    <option value="Privado">Privado</option>
-                </select>
+            <div class="row g-3">
+                <div class="col">
+                    <label for="nombreColegio" class="form-label"></label>
+                    <input type="text" class="form-control" id="nombreColegio" name="nombreColegio" placeholder="Nombre Colegio" th:field="*{nombreColegio}" required>
+                </div>
+                <div class="col">
+                    <label for="tipoColegio" class="form-label"></label>
+                    <select class="form-select" id="tipoColegio" name="tipoColegio" th:field="*{tipoColegio}" required>
+                        <option value="Municipal">Municipal</option>
+                        <option value="Subvencionado">Subvencionado</option>
+                        <option value="Privado">Privado</option>
+                    </select>
+                </div>
             </div>
 
-            <div>
-                <label for="egreso" class="form-label"></label>
-                <input type="text" class="form-control" id="egreso" name="egreso" placeholder="Año de egreso" th:field="*{egreso}" required>
-            </div>
+            <label for="egreso" class="form-label"></label>
+            <select class="form-select" id="egreso" name="egreso" th:field="*{egreso}" required>
+                <option value="" selected>Año de egreso</option>
+                <option th:each="year : ${#numbers.sequence(1990, 2023)}"
+                        th:value="${year}"
+                        th:text="${year}"></option>
+            </select>
+        </div>
+
+        <div class="mt-4">
+            <h3>Selección de Cuotas</h3>
+                <div class="mb-3">
+                    <label for="numeroCuotas" class="form-label"></label>
+                    <select class="form-select" id="numeroCuotas" name="numeroCuotas" th:field="*{numeroCuotas}" required>
+                        <option value=1>1</option>
+                        <option value=2>2</option>
+                        <option value=3>3</option>
+                        <option value=4>4</option>
+                        <option value=5>5</option>
+                        <option value=6>6</option>
+                        <option value=7>7</option>
+                        <option value=8>8</option>
+                        <option value=9>9</option>
+                        <option value=10>10</option>
+                    </select>
+                </div>
         </div>
 
         <button type="submit" class="btn btn-primary mt-3 w-100">Guardar</button>
+
+        <script>
+            document.getElementById('tipoColegio').addEventListener('change', function () {
+                let tipoColegio = this.value;
+                let numeroCuotasSelect = document.getElementById('numeroCuotas');
+
+                // Habilitar todas las opciones primero
+                for (let i = 0; i < numeroCuotasSelect.options.length; i++) {
+                    numeroCuotasSelect.options[i].disabled = false;
+                }
+
+                // Deshabilitar opciones según el tipo de colegio
+                if (tipoColegio === 'Subvencionado') {
+                    for (let i = 7; i < numeroCuotasSelect.options.length; i++) {
+                        numeroCuotasSelect.options[i].disabled = true;
+                    }
+                } else if (tipoColegio === 'Privado') {
+                    for (let i = 4; i < numeroCuotasSelect.options.length; i++) {
+                        numeroCuotasSelect.options[i].disabled = true;
+                    }
+                }
+            });
+        </script>
     </form>
 </div>
 </body>

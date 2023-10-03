@@ -14,6 +14,8 @@ public class Arancel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idArancel;
-    private Float monto;
+    private Integer monto;
     private Integer numCuotas;
+    private float descuento;
+    private String rutEstudiante;
 }

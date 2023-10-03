@@ -1,6 +1,7 @@
 package com.tingeso.entrega1.services;
 
 import com.tingeso.entrega1.entities.Estudiante;
+import com.tingeso.entrega1.repositories.ArancelRepository;
 import com.tingeso.entrega1.repositories.EstudianteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ public class EstudianteService {
     @Autowired
     EstudianteRepository estudianteRepository;
 
+    @Autowired
+    ArancelService arancelService;
+
     public ArrayList<Estudiante> getEstudiantes(){
         return (ArrayList<Estudiante>) estudianteRepository.findAll();
     }
@@ -21,5 +25,9 @@ public class EstudianteService {
         return estudianteRepository.findByRut(rut);
     }
 
-    public Estudiante guardarEstudiante(Estudiante e) { return estudianteRepository.save(e); }
+    public void guardarEstudiante(Estudiante e) {
+        estudianteRepository.save(e);
+        arancelService.crearArancel(e);
+    }
+
 }

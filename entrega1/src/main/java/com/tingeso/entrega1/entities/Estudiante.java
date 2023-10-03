@@ -23,5 +23,6 @@ public class Estudiante {
     private String tipoColegio;
     private String nombreColegio;
     private Integer egreso;
-    //private Float promedioNotas;
+    private Integer numeroCuotas;
+    private Float promedioNotas;
 }

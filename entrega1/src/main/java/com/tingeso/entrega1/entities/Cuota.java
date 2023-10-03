@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
-
 @Entity
 @Data
 @Table(name = "Cuota")
@@ -16,8 +14,10 @@ public class Cuota {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idCuota;
-    private Float monto;
+    private Integer monto;
+    private Integer descuento;
     private Boolean pagado;
-    private Date fechaPago;
-    private Date fechaExp;
+    private String fechaPago;
+    private String fechaExp;
+    private Long idArancel;
 }
