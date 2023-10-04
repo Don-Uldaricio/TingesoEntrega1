@@ -14,6 +14,7 @@ public class Cuota {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idCuota;
+    private Integer numeroCuota;
     private Integer monto;
     private Integer descuento;
     private Boolean pagado;

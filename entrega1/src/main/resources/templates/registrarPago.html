@@ -23,11 +23,11 @@
     </div>
 </nav>
 
-<div class="container mt-5">
-    <h1 class="text-center">Lista de Cuotas del Estudiante</h1>
+<div class="container mt-5 p-5 pb-2 rounded-4">
+    <h1 class="text-center">Pago de Cuotas</h1>
 
     <!-- Formulario para ingresar el RUT -->
-    <form th:action="@{/cuotaEstudiante}" method="get">
+    <form th:action="@{/registrarPago}" method="get">
         <div class="mb-3">
             <label for="rut" class="form-label">Ingrese el RUT del estudiante:</label>
             <input type="text" class="form-control" id="rut" name="rut" required>
@@ -36,30 +36,9 @@
     </form>
 
     <!-- Mostrar la lista de cuotas -->
-    <div th:if="${estudiante != null}" class="mt-4">
-        <h2>Información del Estudiante</h2>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>RUT</th>
-                <th>Tipo de Colegio</th>
-                <th>Año de egreso</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td th:text="${estudiante.getNombres()}"></td>
-                <td th:text="${estudiante.getApellidos()}"></td>
-                <td th:text="${estudiante.getRut()}"></td>
-                <td th:text="${estudiante.getTipoColegio()}"></td>
-                <td th:text="${estudiante.getEgreso()}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <div th:if="${cuotasEstudiante != null}" class="mt-4">
         <h2>Cuotas del Estudiante</h2>
-        <table class="table table-bordered">
+        <table class="table table-bordered rounded-4">
             <thead>
             <tr>
                 <th>Número de Cuota</th>
@@ -67,6 +46,7 @@
                 <th>Descuento</th>
                 <th>Fecha de Vencimiento</th>
                 <th>Fecha de Pago</th>
+                <th>Registrar Pago</th>
             </tr>
             </thead>
             <tbody>
@@ -76,6 +56,12 @@
                 <td th:text="${cuota.getDescuento()}"></td>
                 <td th:text="${cuota.getFechaExp()}"></td>
                 <td th:text="${cuota.getFechaPago()}"></td>
+                <td>
+                    <form th:action="@{/pagarCuota}" method="post">
+                        <input type="hidden" name="idCuota" th:value="${cuota.idCuota}" />
+                        <button type="submit" class="btn btn-primary" th:disabled="${cuota.pagado}">Pagar</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>

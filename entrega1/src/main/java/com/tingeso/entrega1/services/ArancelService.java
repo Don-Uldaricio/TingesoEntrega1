@@ -1,6 +1,7 @@
 package com.tingeso.entrega1.services;
 
 import com.tingeso.entrega1.entities.Arancel;
+import com.tingeso.entrega1.entities.Cuota;
 import com.tingeso.entrega1.entities.Estudiante;
 import com.tingeso.entrega1.repositories.ArancelRepository;
 import com.tingeso.entrega1.repositories.EstudianteRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -60,6 +62,26 @@ public class ArancelService {
         }
 
         return descuento;
+    }
+
+    public Arancel buscarPorRut(String rut) {
+        List<Arancel> aranceles = arancelRepository.findAll();
+        for (Arancel a: aranceles) {
+            if (Objects.equals(a.getRutEstudiante(), rut)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Cuota> buscarCuotas(String rut) {
+        Arancel arancel = buscarPorRut(rut);
+        if (arancel != null) {
+            if (arancel.getNumCuotas() != 0) {
+                return cuotaService.listarCuotas(arancel.getIdArancel());
+            }
+        }
+        return null;
     }
 
 }
