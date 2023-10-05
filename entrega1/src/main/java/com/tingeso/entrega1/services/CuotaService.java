@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -17,7 +18,7 @@ public class CuotaService {
 
     public Cuota buscarCuotaPorId(Integer idCuota) { return cuotaRepository.findById(idCuota);}
 
-    public Cuota guardarCuota(Cuota c) { return cuotaRepository.save(c); }
+    public void guardarCuota(Cuota c) { cuotaRepository.save(c); }
 
     public void crearCuotas(Arancel arancel) {
         int valorCuota = arancel.getMonto() / arancel.getNumCuotas();
@@ -27,7 +28,7 @@ public class CuotaService {
             cuota.setMonto(valorCuota);
             cuota.setDescuento(0);
             cuota.setPagado(false);
-            cuota.setFechaPago("NO PAGADA");
+            cuota.setFechaPago("");
             cuota.setIdArancel(arancel.getIdArancel());
 
             // Seteamos la fecha de expiración de cada cuota
@@ -54,5 +55,38 @@ public class CuotaService {
         c.setPagado(true);
         c.setFechaPago(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         return c;
+    }
+
+    public void actualizarCuotas(ArrayList<Cuota> cuotas) {
+        for (Cuota c: cuotas) {
+            if (!c.getPagado()) {
+                calcularAtrasoCuota(c);
+                cuotaRepository.save(c);
+            }
+        }
+    }
+
+    public void calcularAtrasoCuota(Cuota cuota) {
+        int mesesAtraso = calcularMesesAtraso(cuota);
+        if (mesesAtraso == 0) {
+            cuota.setInteres(0);
+        } else if (mesesAtraso == 1) {
+            cuota.setInteres(0.03f);
+        } else if (mesesAtraso == 2) {
+            cuota.setInteres(0.06f);
+        } else if (mesesAtraso == 3) {
+            cuota.setInteres(0.09f);
+        } else {
+            cuota.setInteres(0.15f);
+        }
+        cuota.setMesesAtraso(mesesAtraso);
+    }
+
+    public int calcularMesesAtraso(Cuota cuota) {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fechaExpiracion = LocalDate.parse(cuota.getFechaExp(), formato);
+        LocalDate fechaActual = LocalDate.now();
+        Period diferencia = Period.between(fechaExpiracion, fechaActual);
+        return diferencia.getMonths();
     }
 }

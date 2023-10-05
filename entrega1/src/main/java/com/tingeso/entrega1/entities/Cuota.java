@@ -17,8 +17,14 @@ public class Cuota {
     private Integer numeroCuota;
     private Integer monto;
     private Integer descuento;
+    private int mesesAtraso;
+    private float interes;
     private Boolean pagado;
     private String fechaPago;
     private String fechaExp;
     private Long idArancel;
+
+    public int getMontoFinal() {
+        return (int) (monto * (1 - getDescuento() + getInteres()));
+    }
 }

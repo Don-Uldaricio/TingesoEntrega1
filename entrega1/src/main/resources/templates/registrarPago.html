@@ -27,7 +27,7 @@
     <h1 class="text-center">Pago de Cuotas</h1>
 
     <!-- Formulario para ingresar el RUT -->
-    <form th:action="@{/registrarPago}" method="get">
+    <form th:action="@{/generarPlanillaPago}" method="post">
         <div class="mb-3">
             <label for="rut" class="form-label">Ingrese el RUT del estudiante:</label>
             <input type="text" class="form-control" id="rut" name="rut" required>
@@ -41,19 +41,23 @@
         <table class="table table-bordered rounded-4">
             <thead>
             <tr>
-                <th>Número de Cuota</th>
+                <th>N Cuota</th>
                 <th>Monto</th>
                 <th>Descuento</th>
+                <th>Interés</th>
+                <th>Monto Final</th>
                 <th>Fecha de Vencimiento</th>
                 <th>Fecha de Pago</th>
                 <th>Registrar Pago</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="cuota : ${cuotasEstudiante}">
+            <tr th:each="cuota : ${cuotasEstudiante}" th:if="${!cuota.pagado}">
                 <td th:text="${cuota.getIdCuota()}"></td>
                 <td th:text="${cuota.getMonto()}"></td>
                 <td th:text="${cuota.getDescuento()}"></td>
+                <td th:text="${cuota.getInteres()}"></td>
+                <td th:text="${cuota.getMontoFinal()}"></td>
                 <td th:text="${cuota.getFechaExp()}"></td>
                 <td th:text="${cuota.getFechaPago()}"></td>
                 <td>

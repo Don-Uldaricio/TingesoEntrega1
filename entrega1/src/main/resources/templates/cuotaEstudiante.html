@@ -27,7 +27,7 @@
     <h1 class="text-center">Lista de Cuotas del Estudiante</h1>
 
     <!-- Formulario para ingresar el RUT -->
-    <form th:action="@{/cuotaEstudiante}" method="get">
+    <form th:action="@{/actualizarCuotasEstudiante}" method="post">
         <div class="mb-3">
             <label for="rut" class="form-label">Ingrese el RUT del estudiante:</label>
             <input type="text" class="form-control" id="rut" name="rut" required>
@@ -44,6 +44,7 @@
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>RUT</th>
+                <th>Nombre Colegio</th>
                 <th>Tipo de Colegio</th>
                 <th>Año de egreso</th>
             </tr>
@@ -53,29 +54,58 @@
                 <td th:text="${estudiante.getNombres()}"></td>
                 <td th:text="${estudiante.getApellidos()}"></td>
                 <td th:text="${estudiante.getRut()}"></td>
+                <td th:text="${estudiante.getNombreColegio()}"></td>
                 <td th:text="${estudiante.getTipoColegio()}"></td>
                 <td th:text="${estudiante.getEgreso()}"></td>
             </tr>
             </tbody>
         </table>
-        <h2>Cuotas del Estudiante</h2>
+        <h3>Cuotas Pendientes y Atrasadas</h3>
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>Número de Cuota</th>
                 <th>Monto</th>
                 <th>Descuento</th>
+                <th>Interés</th>
                 <th>Fecha de Vencimiento</th>
-                <th>Fecha de Pago</th>
+                <th>Meses Atraso</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="cuota : ${cuotasEstudiante}">
+            <tr th:each="cuota : ${cuotasEstudiante}" th:if="${cuota.pagado == false}">
                 <td th:text="${cuota.getIdCuota()}"></td>
                 <td th:text="${cuota.getMonto()}"></td>
                 <td th:text="${cuota.getDescuento()}"></td>
+                <td th:text="${cuota.getInteres()}"></td>
+                <td th:text="${cuota.getFechaExp()}"></td>
+                <td th:text="${cuota.getMesesAtraso()}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>Cuotas Pagadas</h3>
+        <table class="table table-bordered rounded-4">
+            <thead>
+            <tr>
+                <th>Número de Cuota</th>
+                <th>Monto</th>
+                <th>Descuento</th>
+                <th>Interés</th>
+                <th>Fecha de Vencimiento</th>
+                <th>Fecha de Pago</th>
+                <th>Meses Atraso</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cuota : ${cuotasEstudiante}" th:if="${cuota.pagado == true}">
+                <td th:text="${cuota.getIdCuota()}"></td>
+                <td th:text="${cuota.getMonto()}"></td>
+                <td th:text="${cuota.getDescuento()}"></td>
+                <td th:text="${cuota.getInteres()}"></td>
                 <td th:text="${cuota.getFechaExp()}"></td>
                 <td th:text="${cuota.getFechaPago()}"></td>
+                <td th:text="${cuota.getMesesAtraso()}"></td>
             </tr>
             </tbody>
         </table>

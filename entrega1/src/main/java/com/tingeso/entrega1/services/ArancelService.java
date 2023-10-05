@@ -84,4 +84,17 @@ public class ArancelService {
         return null;
     }
 
+    public void actualizarArancel(String rut) {
+        int nuevoArancel = 0;
+        Arancel arancel = buscarPorRut(rut);
+        System.out.println(arancel.getMonto());
+        ArrayList<Cuota> cuotas = buscarCuotas(rut);
+        cuotaService.actualizarCuotas(cuotas);
+        for (Cuota c: cuotas) {
+            nuevoArancel = nuevoArancel + (int) (c.getMonto() * (1 + c.getInteres()));
+        }
+        arancel.setMonto(nuevoArancel);
+        arancelRepository.save(arancel);
+    }
+
 }
