@@ -1,5 +1,17 @@
 version: "3.8"
 services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "81:81"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app1
+      - app2
+
   db:
     image: postgres
     restart: always
@@ -10,8 +22,9 @@ services:
       POSTGRES_DB: tingeso1
     ports:
       - "5433:5432"
-  app:
-    container_name: tingeso-entrega1
+
+  app1:
+    container_name: tingeso-entrega1-1
     image: donuldaricio/tingeso-entrega1
     ports:
       - "8091:8091"
@@ -24,5 +37,17 @@ services:
         condition: on-failure
     depends_on:
       - db
-
-
+  app2:
+    container_name: tingeso-entrega1-2
+    image: donuldaricio/tingeso-entrega1
+    ports:
+      - "8092:8091"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/tingeso1
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1234
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - db
