@@ -45,9 +45,8 @@
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>RUT</th>
-                <th>Nombre Colegio</th>
-                <th>Tipo de Colegio</th>
-                <th>Año de egreso</th>
+                <th>N exámenes</th>
+                <th>Pje. Promedio</th>
             </tr>
             </thead>
             <tbody>
@@ -55,14 +54,40 @@
                 <td th:text="${estudiante.getNombres()}"></td>
                 <td th:text="${estudiante.getApellidos()}"></td>
                 <td th:text="${estudiante.getRut()}"></td>
-                <td th:text="${estudiante.getNombreColegio()}"></td>
-                <td th:text="${estudiante.getTipoColegio()}"></td>
-                <td th:text="${estudiante.getEgreso()}"></td>
+                <td th:text="${estudiante.getNumeroExamenes()}"></td>
+                <td th:text="${estudiante.getPromedioNotas()}"></td>
             </tr>
             </tbody>
         </table>
-        <h3>Cuotas Pendientes y Atrasadas</h3>
+
+        <h2>Información del Arancel</h2>
         <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Monto Total</th>
+                <th th:if="${arancel.getNumCuotas() != 0}">Total Pagado</th>
+                <th th:if="${arancel.getNumCuotas() != 0}">Por Pagar</th>
+                <th>Tipo de Pago</th>
+                <th th:if="${arancel.getNumCuotas() != 0}">N de Cuotas</th>
+                <th th:if="${arancel.getNumCuotas() != 0}">N de Cuotas Pagadas</th>
+                <th th:if="${arancel.getNumCuotas() != 0}">N Cuotas Atrasadas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${arancel.getMonto()}"></td>
+                <td th:if="${arancel.getNumCuotas() != 0}" th:text="${datosArancel.get(0)}"></td>
+                <td th:if="${arancel.getNumCuotas() != 0}" th:text="${datosArancel.get(1)}"></td>
+                <td th:text="${arancel.getTipoPago()}"></td>
+                <td th:if="${arancel.getNumCuotas() != 0}" th:text="${arancel.getNumCuotas()}"></td>
+                <td th:if="${arancel.getNumCuotas() != 0}" th:text="${datosArancel.get(2)}"></td>
+                <td th:if="${arancel.getNumCuotas() != 0}" th:text="${datosArancel.get(3)}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3 th:if="${estudiante.numeroCuotas != 0}">Cuotas Pendientes y Atrasadas</h3>
+        <table th:if="${estudiante.numeroCuotas != 0}" class="table table-bordered">
             <thead>
             <tr>
                 <th>Número de Cuota</th>
@@ -85,8 +110,8 @@
             </tbody>
         </table>
 
-        <h3>Cuotas Pagadas</h3>
-        <table class="table table-bordered rounded-4">
+        <h3 th:if="${estudiante.numeroCuotas != 0}">Cuotas Pagadas</h3>
+        <table th:if="${estudiante.numeroCuotas != 0}" class="table table-bordered rounded-4">
             <thead>
             <tr>
                 <th>Número de Cuota</th>

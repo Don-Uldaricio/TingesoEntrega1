@@ -30,8 +30,17 @@ public class EstudianteService {
     }
 
     public void guardarEstudiante(Estudiante e) {
+        e.setPromedioNotas(0f);
+        e.setNumeroExamenes(0);
         estudianteRepository.save(e);
         arancelService.crearArancel(e);
+    }
+
+    public Arancel buscarArancelPorRut(String rut) {
+        if (estudianteRepository.findByRut(rut) != null) {
+            return arancelService.buscarPorRut(rut);
+        }
+        return null;
     }
 
     public ArrayList<Cuota> buscarCuotasPorRut(String rut) {
@@ -43,6 +52,10 @@ public class EstudianteService {
 
     public void generarPlanilla(String rut) {
         arancelService.actualizarArancel(rut);
+    }
+
+    public ArrayList<Integer> datosPagoArancel(String rut) {
+        return arancelService.calcularDatosArancel(rut);
     }
 
 }

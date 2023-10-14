@@ -88,6 +88,7 @@
                 <div class="mb-3">
                     <label for="numeroCuotas" class="form-label"></label>
                     <select class="form-select" id="numeroCuotas" name="numeroCuotas" th:field="*{numeroCuotas}" required>
+                        <option value=0>0</option>
                         <option value=1>1</option>
                         <option value=2>2</option>
                         <option value=3>3</option>
@@ -116,11 +117,11 @@
 
                 // Deshabilitar opciones según el tipo de colegio
                 if (tipoColegio === 'Subvencionado') {
-                    for (let i = 7; i < numeroCuotasSelect.options.length; i++) {
+                    for (let i = 8; i < numeroCuotasSelect.options.length; i++) {
                         numeroCuotasSelect.options[i].disabled = true;
                     }
                 } else if (tipoColegio === 'Privado') {
-                    for (let i = 4; i < numeroCuotasSelect.options.length; i++) {
+                    for (let i = 5; i < numeroCuotasSelect.options.length; i++) {
                         numeroCuotasSelect.options[i].disabled = true;
                     }
                 }

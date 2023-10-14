@@ -6,6 +6,7 @@ import com.tingeso.entrega1.repositories.CuotaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Console;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +31,7 @@ public class CuotaService {
             cuota.setPagado(false);
             cuota.setFechaPago("");
             cuota.setIdArancel(arancel.getIdArancel());
+            System.out.println("Id arancel: " + arancel.getIdArancel());
 
             // Seteamos la fecha de expiración de cada cuota
             if (i < 9) {

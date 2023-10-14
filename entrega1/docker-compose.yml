@@ -5,7 +5,7 @@ services:
     container_name: nginx-proxy
     restart: always
     ports:
-      - "81:81"
+      - "80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
@@ -27,7 +27,7 @@ services:
     container_name: tingeso-entrega1-1
     image: donuldaricio/tingeso-entrega1
     ports:
-      - "8091:8091"
+      - "8094:8091"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/tingeso1
       - SPRING_DATASOURCE_USERNAME=postgres
@@ -41,7 +41,7 @@ services:
     container_name: tingeso-entrega1-2
     image: donuldaricio/tingeso-entrega1
     ports:
-      - "8092:8091"
+      - "8093:8091"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/tingeso1
       - SPRING_DATASOURCE_USERNAME=postgres

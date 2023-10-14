@@ -18,4 +18,13 @@ public class Arancel {
     private Integer numCuotas;
     private float descuento;
     private String rutEstudiante;
+
+    public String getTipoPago() {
+        if (numCuotas == 0) {
+            return "Contado";
+        }
+        else {
+            return "Cuotas";
+        }
+    }
 }

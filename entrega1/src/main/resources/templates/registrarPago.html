@@ -54,7 +54,7 @@
             </thead>
             <tbody>
             <tr th:each="cuota : ${cuotasEstudiante}" th:if="${!cuota.pagado}">
-                <td th:text="${cuota.getIdCuota()}"></td>
+                <td th:text="${cuota.getNumeroCuota()}"></td>
                 <td th:text="${cuota.getMonto()}"></td>
                 <td th:text="${cuota.getDescuento()}"></td>
                 <td th:text="${cuota.getInteres()}"></td>

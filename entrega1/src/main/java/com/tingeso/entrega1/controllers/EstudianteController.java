@@ -1,5 +1,6 @@
 package com.tingeso.entrega1.controllers;
 
+import com.tingeso.entrega1.entities.Arancel;
 import com.tingeso.entrega1.entities.Cuota;
 import com.tingeso.entrega1.services.EstudianteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,17 +38,20 @@ public class EstudianteController {
     @PostMapping("/actualizarCuotasEstudiante")
     public String actualizarCuotasEstudiante(Model model, @Param("rut") String rut) {
         Estudiante estudiante = estudianteService.findByRut(rut);
+        Arancel arancel = estudianteService.buscarArancelPorRut(rut);
         ArrayList<Cuota> cuotasEstudiante = estudianteService.buscarCuotasPorRut(rut);
         estudianteService.generarPlanilla(rut);
+        ArrayList<Integer> datosArancel = estudianteService.datosPagoArancel(rut);
         model.addAttribute("cuotasEstudiante", cuotasEstudiante);
+        model.addAttribute("arancel", arancel);
         model.addAttribute("estudiante", estudiante);
+        model.addAttribute("datosArancel", datosArancel);
         return "cuotaEstudiante";
     }
 
     // En tu controlador
     @PostMapping("/guardarEstudiante")
     public String guardarEstudiante(@ModelAttribute Estudiante estudiante) {
-        estudiante.setPromedioNotas(0f);
         estudianteService.guardarEstudiante(estudiante);
         return "redirect:/ingresoEstudiante";
     }

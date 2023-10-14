@@ -26,16 +26,19 @@ public class ArancelService {
         Arancel arancel = new Arancel();
         if (e.getNumeroCuotas() == 0) {
             arancel.setMonto((int) (1500000 * 0.5));
+            arancel.setNumCuotas(0);
+            arancel.setRutEstudiante(e.getRut());
+            arancelRepository.save(arancel);
         } else {
             String tipoColegio = e.getTipoColegio();
             int aniosEgreso = diferenciaFechaActual(e.getEgreso());
             arancel.setDescuento(calcularDescuento(tipoColegio, aniosEgreso));
             arancel.setMonto((int) (1500000 * (1 - arancel.getDescuento())));
+            arancel.setRutEstudiante(e.getRut());
+            arancel.setNumCuotas(e.getNumeroCuotas());
+            arancelRepository.save(arancel);
+            cuotaService.crearCuotas(arancel);
         }
-        arancel.setRutEstudiante(e.getRut());
-        arancel.setNumCuotas(e.getNumeroCuotas());
-        arancelRepository.save(arancel);
-        cuotaService.crearCuotas(arancel);
     }
 
     public int diferenciaFechaActual(int fecha) {
@@ -87,14 +90,47 @@ public class ArancelService {
     public void actualizarArancel(String rut) {
         int nuevoArancel = 0;
         Arancel arancel = buscarPorRut(rut);
-        System.out.println(arancel.getMonto());
-        ArrayList<Cuota> cuotas = buscarCuotas(rut);
-        cuotaService.actualizarCuotas(cuotas);
-        for (Cuota c: cuotas) {
-            nuevoArancel = nuevoArancel + (int) (c.getMonto() * (1 + c.getInteres()));
+        if (arancel.getNumCuotas() != 0) {
+            ArrayList<Cuota> cuotas = buscarCuotas(rut);
+            cuotaService.actualizarCuotas(cuotas);
+            for (Cuota c: cuotas) {
+                nuevoArancel = nuevoArancel + (int) (c.getMonto() * (1 + c.getInteres()));
+            }
+            arancel.setMonto(nuevoArancel);
+            arancelRepository.save(arancel);
         }
-        arancel.setMonto(nuevoArancel);
-        arancelRepository.save(arancel);
+    }
+
+    public ArrayList<Integer> calcularDatosArancel(String rut) {
+        Arancel arancel = buscarPorRut(rut);
+        ArrayList<Integer> datosArancel = new ArrayList<>();
+        if (arancel.getNumCuotas() != 0) {
+            ArrayList<Integer> datosCuotas = calcularDatosCuotas(rut);
+            datosArancel.add(datosCuotas.get(0)); // Monto pagado
+            datosArancel.add(arancel.getMonto() - datosArancel.get(0)); // Monto por pagar
+            datosArancel.add(datosCuotas.get(1)); // N cuotas pagadas
+            datosArancel.add(datosCuotas.get(2)); // N cuotas atrasadas
+            return datosArancel;
+        }
+        return null;
+    }
+
+    public ArrayList<Integer> calcularDatosCuotas(String rut) {
+        ArrayList<Cuota> cuotas = buscarCuotas(rut);
+        ArrayList<Integer> cuotasPagadas = new ArrayList<>(); // Monto pagado y cantidad de cuotas pagadas
+        cuotasPagadas.add(0); // Monto pagado
+        cuotasPagadas.add(0); // Numero de cuotas pagadas
+        cuotasPagadas.add(0); // Numero cuotas atrasadas
+        for (Cuota c: cuotas) {
+            if (c.getPagado()) {
+                cuotasPagadas.set(0, cuotasPagadas.get(0) + (int)(c.getMonto()*(1 + c.getInteres() - c.getDescuento())));
+                cuotasPagadas.set(1, cuotasPagadas.get(1) + 1);
+            }
+            if (c.getMesesAtraso() != 0) {
+                cuotasPagadas.set(2, cuotasPagadas.get(2) + 1);
+            }
+        }
+        return cuotasPagadas;
     }
 
 }
