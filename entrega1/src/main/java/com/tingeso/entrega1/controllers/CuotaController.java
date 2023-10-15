@@ -28,7 +28,7 @@ public class CuotaController {
         }
 
         // Redirige a donde desees después de modificar la cuota
-        return "registrarPago";
+        return "redirect:/registrarPago";
     }
 
 }

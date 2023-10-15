@@ -91,7 +91,8 @@
             <thead>
             <tr>
                 <th>Número de Cuota</th>
-                <th>Monto</th>
+                <th>Monto Inicial</th>
+                <th>Monto Final</th>
                 <th>Descuento</th>
                 <th>Interés</th>
                 <th>Fecha de Vencimiento</th>
@@ -102,6 +103,7 @@
             <tr th:each="cuota : ${cuotasEstudiante}" th:if="${cuota.pagado == false}">
                 <td th:text="${cuota.getNumeroCuota()}"></td>
                 <td th:text="${cuota.getMonto()}"></td>
+                <td th:text="${cuota.getMonto()*(1+cuota.getInteres()-cuota.getDescuento())}"></td>
                 <td th:text="${cuota.getDescuento()}"></td>
                 <td th:text="${cuota.getInteres()}"></td>
                 <td th:text="${cuota.getFechaExp()}"></td>
@@ -115,7 +117,8 @@
             <thead>
             <tr>
                 <th>Número de Cuota</th>
-                <th>Monto</th>
+                <th>Monto Inicial</th>
+                <th>Monto Final</th>
                 <th>Descuento</th>
                 <th>Interés</th>
                 <th>Fecha de Vencimiento</th>
@@ -127,6 +130,7 @@
             <tr th:each="cuota : ${cuotasEstudiante}" th:if="${cuota.pagado == true}">
                 <td th:text="${cuota.getNumeroCuota()}"></td>
                 <td th:text="${cuota.getMonto()}"></td>
+                <td th:text="${cuota.getMonto()*(1+cuota.getInteres()-cuota.getDescuento())}"></td>
                 <td th:text="${cuota.getDescuento()}"></td>
                 <td th:text="${cuota.getInteres()}"></td>
                 <td th:text="${cuota.getFechaExp()}"></td>

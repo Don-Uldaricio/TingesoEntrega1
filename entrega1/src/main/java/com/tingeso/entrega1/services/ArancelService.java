@@ -4,12 +4,10 @@ import com.tingeso.entrega1.entities.Arancel;
 import com.tingeso.entrega1.entities.Cuota;
 import com.tingeso.entrega1.entities.Estudiante;
 import com.tingeso.entrega1.repositories.ArancelRepository;
-import com.tingeso.entrega1.repositories.EstudianteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -84,7 +82,7 @@ public class ArancelService {
                 return cuotaService.listarCuotas(arancel.getIdArancel());
             }
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public void actualizarArancel(String rut) {
@@ -131,6 +129,28 @@ public class ArancelService {
             }
         }
         return cuotasPagadas;
+    }
+
+    public void calcularDescuentoArancel(Integer mesExamen, String rut, Float promedio) {
+        Cuota cuotaMes = null;
+        float descuento = 0;
+        ArrayList<Cuota> cuotas = buscarCuotas(rut);
+        for (Cuota c: cuotas) {
+            if (Integer.parseInt(c.getFechaExp().split("-")[1]) == mesExamen + 1) {
+                cuotaMes = c;
+            }
+        }
+        assert cuotaMes != null;
+        if (!cuotaMes.getPagado()) {
+            if (promedio >= 950 && promedio <= 1000) {
+                descuento = 0.1f;
+            } else if (promedio >= 900 && promedio <= 949) {
+                descuento = 0.05f;
+            } else if (promedio >= 850 && promedio <= 899) {
+                descuento = 0.02f;
+            }
+        }
+        cuotaService.calcularDescuentoCuota(cuotaMes, descuento);
     }
 
 }

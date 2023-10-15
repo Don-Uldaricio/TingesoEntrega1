@@ -3,15 +3,14 @@ package com.tingeso.entrega1.services;
 import com.tingeso.entrega1.entities.Arancel;
 import com.tingeso.entrega1.entities.Cuota;
 import com.tingeso.entrega1.entities.Estudiante;
-import com.tingeso.entrega1.repositories.ArancelRepository;
 import com.tingeso.entrega1.repositories.EstudianteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class EstudianteService {
@@ -20,10 +19,6 @@ public class EstudianteService {
 
     @Autowired
     ArancelService arancelService;
-
-    public ArrayList<Estudiante> getEstudiantes(){
-        return (ArrayList<Estudiante>) estudianteRepository.findAll();
-    }
 
     public Estudiante findByRut(String rut){
         return estudianteRepository.findByRut(rut);
@@ -56,6 +51,28 @@ public class EstudianteService {
 
     public ArrayList<Integer> datosPagoArancel(String rut) {
         return arancelService.calcularDatosArancel(rut);
+    }
+
+    public void calcularDescuentoNotas(String[] datos) {
+        // Aumentamos el número de exámenes que ha dado a uno y lo guardamos en la BD
+        Estudiante estudiante = findByRut(datos[0]);
+        estudiante.setNumeroExamenes(estudiante.getNumeroExamenes() + 1);
+        estudianteRepository.save(estudiante);
+
+        // Sacamos los datos del String de entrada a la función
+        String fechaPrueba = datos[1];
+        float promedioNotas = Float.parseFloat(datos[2]);
+
+        // Transformamos la fecha según formato para extraer el día del mes y aplicar descuento al siguiente mes
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fecha = LocalDate.parse(fechaPrueba, formato);
+        int mesExamen = fecha.getMonthValue();
+        System.out.println(mesExamen);
+
+        // Si es un mes válido aplicamos descuento (ya que el ultimo mes del sistema es el 10)
+        if (mesExamen < 10) {
+            arancelService.calcularDescuentoArancel(mesExamen, datos[0], promedioNotas);
+        }
     }
 
 }

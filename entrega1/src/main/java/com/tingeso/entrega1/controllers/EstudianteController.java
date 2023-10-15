@@ -37,10 +37,10 @@ public class EstudianteController {
 
     @PostMapping("/actualizarCuotasEstudiante")
     public String actualizarCuotasEstudiante(Model model, @Param("rut") String rut) {
+        estudianteService.generarPlanilla(rut);
         Estudiante estudiante = estudianteService.findByRut(rut);
         Arancel arancel = estudianteService.buscarArancelPorRut(rut);
         ArrayList<Cuota> cuotasEstudiante = estudianteService.buscarCuotasPorRut(rut);
-        estudianteService.generarPlanilla(rut);
         ArrayList<Integer> datosArancel = estudianteService.datosPagoArancel(rut);
         model.addAttribute("cuotasEstudiante", cuotasEstudiante);
         model.addAttribute("arancel", arancel);
@@ -67,6 +67,11 @@ public class EstudianteController {
         estudianteService.generarPlanilla(rut);
         model.addAttribute("cuotasEstudiante", cuotasEstudiante);
         return "registrarPago";
+    }
+
+    @GetMapping("/importarNotas")
+    public String vistaImportarNotas() {
+        return "importarNotas";
     }
 
 }

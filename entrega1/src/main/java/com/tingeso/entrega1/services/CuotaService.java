@@ -6,7 +6,6 @@ import com.tingeso.entrega1.repositories.CuotaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.Console;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -41,6 +40,10 @@ public class CuotaService {
             }
             cuotaRepository.save(cuota);
         }
+    }
+
+    public ArrayList<Cuota> buscarCuotasPorRut(String rut) {
+        return cuotaRepository.findByRutEstudiante(rut);
     }
 
     public ArrayList<Cuota> listarCuotas(Long idArancel) {
@@ -90,5 +93,10 @@ public class CuotaService {
         LocalDate fechaActual = LocalDate.now();
         Period diferencia = Period.between(fechaExpiracion, fechaActual);
         return diferencia.getMonths();
+    }
+
+    public void calcularDescuentoCuota(Cuota cuota, Float descuento) {
+        cuota.setDescuento(descuento);
+        cuotaRepository.save(cuota);
     }
 }

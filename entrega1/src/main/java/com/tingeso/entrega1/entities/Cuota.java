@@ -16,7 +16,7 @@ public class Cuota {
     private Long idCuota;
     private Integer numeroCuota;
     private Integer monto;
-    private Integer descuento;
+    private float descuento;
     private int mesesAtraso;
     private float interes;
     private Boolean pagado;
