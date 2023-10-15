@@ -6,7 +6,7 @@ spring:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate.jdbc.lob.non_contextual_creation: true
     defer-datasource-initialization: true
