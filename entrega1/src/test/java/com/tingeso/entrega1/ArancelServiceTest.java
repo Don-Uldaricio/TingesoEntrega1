@@ -4,6 +4,8 @@ import com.tingeso.entrega1.entities.Arancel;
 import com.tingeso.entrega1.entities.Cuota;
 import com.tingeso.entrega1.entities.Estudiante;
 import com.tingeso.entrega1.repositories.ArancelRepository;
+import com.tingeso.entrega1.repositories.CuotaRepository;
+import com.tingeso.entrega1.repositories.EstudianteRepository;
 import com.tingeso.entrega1.services.ArancelService;
 import com.tingeso.entrega1.services.CuotaService;
 import com.tingeso.entrega1.services.EstudianteService;
@@ -34,7 +36,13 @@ public class ArancelServiceTest {
     private CuotaService cuotaService;
 
     @MockBean
+    private CuotaRepository cuotaRepository;
+
+    @MockBean
     private EstudianteService estudianteService;
+
+    @MockBean
+    EstudianteRepository estudianteRepository;
 
     @Test
     public void testCrearArancel() {
@@ -92,4 +100,35 @@ public class ArancelServiceTest {
         Arancel result = arancelRepository.findByRut(rut);
         assertEquals(arancel, result);
     }
+
+    @Test
+    public void testActualizarArancel() {
+        // Configura tus objetos de prueba
+        String rut = "1234567890";
+        Arancel arancel = new Arancel();
+        arancel.setNumCuotas(2); // Establece un número de cuotas para que entre en la condición
+        arancelRepository.save(arancel);
+        when(arancelRepository.findByRut(rut)).thenReturn(arancel);
+
+        ArrayList<Cuota> cuotas = new ArrayList<>();
+        // Agrega cuotas a la lista de cuotas
+        Cuota cuota1 = new Cuota();
+        cuota1.setIdArancel(arancel.getIdArancel());
+        cuota1.setMonto(1000);
+        cuotaRepository.save(cuota1);
+        cuotas.add(cuota1);
+
+        when(cuotaService.buscarCuotasPorRut(rut)).thenReturn(cuotas);
+
+        // Llama al método que deseas probar
+        arancelService.actualizarArancel(rut);
+
+        // Verifica que las llamadas a los métodos esperados se hayan realizado
+        verify(arancelRepository, times(1)).save(arancel);
+
+        arancelRepository.delete(arancel);
+        cuotaRepository.delete(cuota1);
+    }
+
+
 }

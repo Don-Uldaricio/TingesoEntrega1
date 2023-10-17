@@ -20,6 +20,7 @@ public class ArancelService {
     @Autowired
     private CuotaService cuotaService;
 
+    // Método que crea el arancel de un estudiante y las cuotas asociadas a esta
     public void crearArancel(Estudiante e) {
         Arancel arancel = new Arancel();
         if (e.getNumeroCuotas() == 0) {
@@ -39,10 +40,12 @@ public class ArancelService {
         }
     }
 
+    // Calcula la diferencia de años de la fecha actual con una fecha entregada
     public int diferenciaFechaActual(int fecha) {
         return LocalDate.now().getYear() - fecha;
     }
 
+    // Calcula el descuento de un estudiante en base al tipo de colegio y años desde que egresó
     public Float calcularDescuento(String tipoColegio, int aniosEgreso) {
         float descuento = 0;
 
@@ -85,20 +88,24 @@ public class ArancelService {
         return new ArrayList<>();
     }
 
+    // Se encarga de actualizar el arancel y las cuotas asociadas
     public void actualizarArancel(String rut) {
         int nuevoArancel = 0;
         Arancel arancel = buscarPorRut(rut);
-        if (arancel.getNumCuotas() != 0) {
-            ArrayList<Cuota> cuotas = buscarCuotas(rut);
-            cuotaService.actualizarCuotas(cuotas);
-            for (Cuota c: cuotas) {
-                nuevoArancel = nuevoArancel + (int) (c.getMonto() * (1 + c.getInteres()));
+        if (arancel != null) {
+            if (arancel.getNumCuotas() != 0) {
+                ArrayList<Cuota> cuotas = buscarCuotas(rut);
+                cuotaService.actualizarCuotas(cuotas);
+                for (Cuota c: cuotas) {
+                    nuevoArancel = nuevoArancel + (int) (c.getMonto() * (1 + c.getInteres()));
+                }
+                arancel.setMonto(nuevoArancel);
+                arancelRepository.save(arancel);
             }
-            arancel.setMonto(nuevoArancel);
-            arancelRepository.save(arancel);
         }
     }
 
+    // Calcula datos del arancel
     public ArrayList<Integer> calcularDatosArancel(String rut) {
         Arancel arancel = buscarPorRut(rut);
         ArrayList<Integer> datosArancel = new ArrayList<>();
@@ -113,6 +120,7 @@ public class ArancelService {
         return null;
     }
 
+    // Calcula datos de las cuotas útiles en el reporte
     public ArrayList<Integer> calcularDatosCuotas(String rut) {
         ArrayList<Cuota> cuotas = buscarCuotas(rut);
         ArrayList<Integer> cuotasPagadas = new ArrayList<>(); // Monto pagado y cantidad de cuotas pagadas
@@ -131,6 +139,7 @@ public class ArancelService {
         return cuotasPagadas;
     }
 
+    // Calcula descuento en el arancel por examen rendido por el estudiante
     public void calcularDescuentoArancel(Integer mesExamen, String rut, Float promedio) {
         Cuota cuotaMes = null;
         float descuento = 0;

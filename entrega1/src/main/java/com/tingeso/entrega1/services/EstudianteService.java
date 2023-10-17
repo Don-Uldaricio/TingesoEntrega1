@@ -20,10 +20,15 @@ public class EstudianteService {
     @Autowired
     ArancelService arancelService;
 
+    // Método que busca en el repositorio un estudiante por su rut
     public Estudiante findByRut(String rut){
         return estudianteRepository.findByRut(rut);
     }
 
+    /*
+    Método que se encarga de guardar un estudiante en la BD e invocar el método
+    crearArancel del arancelService para la creación de cuotas.
+     */
     public void guardarEstudiante(Estudiante e) {
         e.setPromedioNotas(0f);
         e.setNumeroExamenes(0);
@@ -45,6 +50,7 @@ public class EstudianteService {
         return null;
     }
 
+    // Método que se encarga de actualizar el monto del arancel y las cuotas a pagar
     public void generarPlanilla(String rut) {
         arancelService.actualizarArancel(rut);
     }
@@ -53,6 +59,7 @@ public class EstudianteService {
         return arancelService.calcularDatosArancel(rut);
     }
 
+    // Método que se encarga de generar el descuento por promedio de notas de examenes
     public void calcularDescuentoNotas(String[] datos) {
         // Aumentamos el número de exámenes que ha dado a uno y lo guardamos en la BD
         Estudiante estudiante = findByRut(datos[0]);
@@ -67,7 +74,6 @@ public class EstudianteService {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fecha = LocalDate.parse(fechaPrueba, formato);
         int mesExamen = fecha.getMonthValue();
-        System.out.println(mesExamen);
 
         // Si es un mes válido aplicamos descuento (ya que el ultimo mes del sistema es el 10)
         if (mesExamen < 10) {

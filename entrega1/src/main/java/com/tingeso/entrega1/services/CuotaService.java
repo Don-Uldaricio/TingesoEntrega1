@@ -20,6 +20,7 @@ public class CuotaService {
 
     public void guardarCuota(Cuota c) { cuotaRepository.save(c); }
 
+    // Método invocado por ArancelService que se encarga de crear las cuotas
     public void crearCuotas(Arancel arancel) {
         int valorCuota = arancel.getMonto() / arancel.getNumCuotas();
         for (int i = 0; i < arancel.getNumCuotas(); i++) {
@@ -30,7 +31,6 @@ public class CuotaService {
             cuota.setPagado(false);
             cuota.setFechaPago("");
             cuota.setIdArancel(arancel.getIdArancel());
-            System.out.println("Id arancel: " + arancel.getIdArancel());
 
             // Seteamos la fecha de expiración de cada cuota
             if (i < 9) {
@@ -56,12 +56,14 @@ public class CuotaService {
         return cuotas;
     }
 
+    // Cambia el estado de una cuota a pagado y setea la fecha en la que se realizó
     public Cuota pagarCuota(Cuota c) {
         c.setPagado(true);
         c.setFechaPago(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         return c;
     }
 
+    // Actualiza el valor de las cuotas calculando sus meses de atraso y el interés
     public void actualizarCuotas(ArrayList<Cuota> cuotas) {
         for (Cuota c: cuotas) {
             if (!c.getPagado()) {
@@ -71,6 +73,7 @@ public class CuotaService {
         }
     }
 
+    // Calcula el interés de una cuota por meses de atraso
     public void calcularAtrasoCuota(Cuota cuota) {
         int mesesAtraso = calcularMesesAtraso(cuota);
         if (mesesAtraso == 0) {
@@ -87,6 +90,7 @@ public class CuotaService {
         cuota.setMesesAtraso(mesesAtraso);
     }
 
+    // Calcula los meses de atraso de una cuota
     public int calcularMesesAtraso(Cuota cuota) {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fechaExpiracion = LocalDate.parse(cuota.getFechaExp(), formato);
@@ -95,6 +99,7 @@ public class CuotaService {
         return diferencia.getMonths();
     }
 
+    // Aplica descuento a una cuota por haber rendido una prueba
     public void calcularDescuentoCuota(Cuota cuota, Float descuento) {
         cuota.setDescuento(descuento);
         cuotaRepository.save(cuota);
