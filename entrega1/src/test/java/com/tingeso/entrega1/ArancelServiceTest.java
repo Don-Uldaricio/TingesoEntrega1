@@ -49,9 +49,9 @@ public class ArancelServiceTest {
         // Setup
         Estudiante estudiante = new Estudiante();
         estudiante.setRut("12345678-9");
-        estudiante.setNumeroCuotas(5);
+        estudiante.setNumeroCuotas(Integer.valueOf(5));
         estudiante.setTipoColegio("Municipal");
-        estudiante.setEgreso(2020);
+        estudiante.setEgreso(Integer.valueOf(2020));
 
         // Ejecutamos
         arancelService.crearArancel(estudiante);
@@ -106,7 +106,7 @@ public class ArancelServiceTest {
         // Configura tus objetos de prueba
         String rut = "1234567890";
         Arancel arancel = new Arancel();
-        arancel.setNumCuotas(2); // Establece un número de cuotas para que entre en la condición
+        arancel.setNumCuotas(Integer.valueOf(2)); // Establece un número de cuotas para que entre en la condición
         arancelRepository.save(arancel);
         when(arancelRepository.findByRut(rut)).thenReturn(arancel);
 
@@ -114,7 +114,7 @@ public class ArancelServiceTest {
         // Agrega cuotas a la lista de cuotas
         Cuota cuota1 = new Cuota();
         cuota1.setIdArancel(arancel.getIdArancel());
-        cuota1.setMonto(1000);
+        cuota1.setMonto(Integer.valueOf(10000));
         cuotaRepository.save(cuota1);
         cuotas.add(cuota1);
 

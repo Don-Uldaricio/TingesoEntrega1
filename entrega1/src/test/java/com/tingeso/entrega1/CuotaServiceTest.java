@@ -27,7 +27,7 @@ public class CuotaServiceTest {
     @Test
     public void testBuscarCuotaPorId() {
         // Setup
-        Integer idCuota = 1;
+        Integer idCuota = Integer.valueOf(1);
         Cuota cuota = new Cuota();
         when(cuotaRepository.findById(idCuota)).thenReturn(cuota);
 
@@ -54,8 +54,8 @@ public class CuotaServiceTest {
     public void testCrearCuotas() {
         // Setup
         Arancel arancel = new Arancel();
-        arancel.setNumCuotas(5);
-        arancel.setMonto(10000);
+        arancel.setNumCuotas(Integer.valueOf(5));
+        arancel.setMonto(Integer.valueOf(10000));
 
         // Ejecutamos
         cuotaService.crearCuotas(arancel);
@@ -81,7 +81,7 @@ public class CuotaServiceTest {
     @Test
     public void testListarCuotas() {
         // Setup
-        Long idArancel = 1L;
+        Long idArancel = Long.valueOf(1);
         ArrayList<Cuota> cuotas = new ArrayList<>();
         when(cuotaRepository.findByIdArancel(idArancel)).thenReturn(cuotas);
 
@@ -96,7 +96,7 @@ public class CuotaServiceTest {
     public void testPagarCuota() {
         // Setup
         Cuota cuota = new Cuota();
-        cuota.setPagado(false);
+        cuota.setPagado(Boolean.FALSE);
 
         // Ejecutamos
         cuotaService.pagarCuota(cuota);
@@ -112,8 +112,8 @@ public class CuotaServiceTest {
         ArrayList<Cuota> cuotas = new ArrayList<>();
         Cuota cuota1 = new Cuota();
         Cuota cuota2 = new Cuota();
-        cuota1.setPagado(false);
-        cuota2.setPagado(false);
+        cuota1.setPagado(Boolean.FALSE);
+        cuota2.setPagado(Boolean.FALSE);
         cuota1.setFechaExp("2023-05-05");
         cuota2.setFechaExp("2023-06-05");
         cuotas.add(cuota1);
@@ -157,8 +157,8 @@ public class CuotaServiceTest {
     public void testCalcularDescuentoCuota() {
         // Setup
         Cuota cuota = new Cuota();
-        cuota.setMonto(1000);
-        Float descuento = 0.1f;  // 10% de descuento
+        cuota.setMonto(Integer.valueOf(1000));
+        Float descuento = Float.valueOf(0.1f);  // 10% de descuento
 
         // Ejecutamos
         cuotaService.calcularDescuentoCuota(cuota, descuento);

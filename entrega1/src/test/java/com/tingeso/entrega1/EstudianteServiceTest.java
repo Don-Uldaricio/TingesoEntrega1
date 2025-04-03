@@ -149,8 +149,8 @@ public class EstudianteServiceTest {
         // Setup
         String rut = "12345678-9";
         ArrayList<Integer> datosArancel = new ArrayList<>();
-        datosArancel.add(1000);
-        datosArancel.add(2000);
+        datosArancel.add(Integer.valueOf(1000));
+        datosArancel.add(Integer.valueOf(2000));
 
         when(arancelService.calcularDatosArancel(rut)).thenReturn(datosArancel);
 
@@ -168,7 +168,7 @@ public class EstudianteServiceTest {
         String[] datos = {"12345678-9", "2023-05-15", "5.0"};
         Estudiante estudiante = new Estudiante();
         estudiante.setRut(datos[0]);
-        estudiante.setNumeroExamenes(0);
+        estudiante.setNumeroExamenes(Integer.valueOf(0));
 
         when(estudianteRepository.findByRut(datos[0])).thenReturn(estudiante);
         when(estudianteRepository.save(any(Estudiante.class))).thenReturn(estudiante);
@@ -180,7 +180,7 @@ public class EstudianteServiceTest {
         assertEquals(1, estudiante.getNumeroExamenes());
 
         // Afirmamos que se llamó al método calcularDescuentoArancel() de arancelService
-        verify(arancelService, times(1)).calcularDescuentoArancel(anyInt(), eq(datos[0]), anyFloat());
+        verify(arancelService, times(1)).calcularDescuentoArancel(Integer.valueOf(anyInt()), eq(datos[0]), Float.valueOf(anyFloat()));
     }
 
 
