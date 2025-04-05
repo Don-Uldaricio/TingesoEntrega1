@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,4 +27,9 @@ public class Estudiante {
     private Integer numeroCuotas;
     private Integer numeroExamenes;
     private Float promedioNotas;
+
+    @ElementCollection
+    @CollectionTable(name = "asistencia_mensual", joinColumns = @JoinColumn(name = "estudiante_id"))
+    @Column(name = "porcentaje_asistencia")
+    private List<Float> asistenciaMensual = new ArrayList<>(); // Inicializamos una lista vacía sin tamaño fijo
 }

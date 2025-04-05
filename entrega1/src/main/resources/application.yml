@@ -6,7 +6,7 @@ spring:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate.jdbc.lob.non_contextual_creation: true
     defer-datasource-initialization: true
@@ -22,6 +22,11 @@ spring:
     suffix: .html
     mode: HTML
     cache: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 server:
   port: 8091
+
