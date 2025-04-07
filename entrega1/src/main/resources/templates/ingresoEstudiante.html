@@ -77,7 +77,7 @@
             <label for="egreso" class="form-label"></label>
             <select class="form-select" id="egreso" name="egreso" th:field="*{egreso}" required>
                 <option value="" selected>Año de egreso</option>
-                <option th:each="year : ${#numbers.sequence(1990, 2023)}"
+                <option th:each="year : ${#numbers.sequence(1990, 2024)}"
                         th:value="${year}"
                         th:text="${year}"></option>
             </select>

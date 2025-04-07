@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -95,8 +96,16 @@ public class CuotaService {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fechaExpiracion = LocalDate.parse(cuota.getFechaExp(), formato);
         LocalDate fechaActual = LocalDate.now();
-        Period diferencia = Period.between(fechaExpiracion, fechaActual);
-        return diferencia.getMonths();
+
+        // Si la cuota aún no está vencida, retornar 0 (no hay atraso)
+        if (fechaActual.isBefore(fechaExpiracion)) {
+            return 0;
+        }
+
+        // Calculamos la diferencia total en meses
+        long mesesDiferencia = ChronoUnit.MONTHS.between(fechaExpiracion, fechaActual);
+
+        return (int) mesesDiferencia;
     }
 
     // Aplica descuento a una cuota por haber rendido una prueba
