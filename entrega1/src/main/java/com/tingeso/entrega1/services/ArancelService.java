@@ -4,23 +4,21 @@ import com.tingeso.entrega1.entities.Arancel;
 import com.tingeso.entrega1.entities.Cuota;
 import com.tingeso.entrega1.entities.Estudiante;
 import com.tingeso.entrega1.repositories.ArancelRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.ArrayList;
 
 @Service
 public class ArancelService {
+    @Autowired
+    private ArancelRepository arancelRepository;
 
-    private final ArancelRepository arancelRepository;
-    private final CuotaService cuotaService;
-
-    public ArancelService(ArancelRepository arancelRepository, CuotaService cuotaService) {
-        this.arancelRepository = arancelRepository;
-        this.cuotaService = cuotaService;
-    }
+    @Autowired
+    private CuotaService cuotaService;
 
     public void crearArancel(Estudiante e) {
         Arancel arancel = new Arancel();
@@ -56,9 +54,9 @@ public class ArancelService {
 
         if (aniosEgreso == 0) {
             descuento += 0.15f;
-        } else if (aniosEgreso <= 2) {
+        } else if (aniosEgreso >= 1 && aniosEgreso <= 2) {
             descuento += 0.08f;
-        } else if (aniosEgreso <= 4) {
+        } else if (aniosEgreso >= 3 && aniosEgreso <= 4) {
             descuento += 0.04f;
         }
 
@@ -75,49 +73,52 @@ public class ArancelService {
         return null;
     }
 
-    public List<Cuota> buscarCuotas(String rut) {
+    public ArrayList<Cuota> buscarCuotas(String rut) {
         Arancel arancel = buscarPorRut(rut);
-        if (arancel != null && arancel.getNumCuotas() != 0) {
-            return cuotaService.listarCuotas(arancel.getIdArancel());
+        if (arancel != null) {
+            if (arancel.getNumCuotas() != 0) {
+                return cuotaService.listarCuotas(arancel.getIdArancel());
+            }
         }
-        return List.of(); // colección vacía en vez de null
+        return new ArrayList<>();
     }
 
     public void actualizarArancel(String rut) {
         int nuevoArancel = 0;
         Arancel arancel = buscarPorRut(rut);
-        if (arancel != null && arancel.getNumCuotas() != 0) {
-            List<Cuota> cuotas = buscarCuotas(rut);
-            cuotaService.actualizarCuotas(cuotas);
-            for (Cuota c : cuotas) {
-                nuevoArancel += (int) (c.getMonto() * (1 + c.getInteres()));
+        if (arancel != null) {
+            if (arancel.getNumCuotas() != 0) {
+                ArrayList<Cuota> cuotas = buscarCuotas(rut);
+                cuotaService.actualizarCuotas(cuotas);
+                for (Cuota c : cuotas) {
+                    nuevoArancel = nuevoArancel + (int) (c.getMonto() * (1 + c.getInteres()));
+                }
+                arancel.setMonto(nuevoArancel);
+                arancelRepository.save(arancel);
             }
-            arancel.setMonto(nuevoArancel);
-            arancelRepository.save(arancel);
         }
     }
 
-    public List<Integer> calcularDatosArancel(String rut) {
+    public ArrayList<Integer> calcularDatosArancel(String rut) {
         Arancel arancel = buscarPorRut(rut);
-        if (arancel == null) {
-            return List.of(); // Evita null si no se encuentra el arancel
-        }
-
-        List<Integer> datosArancel = new ArrayList<>();
+        ArrayList<Integer> datosArancel = new ArrayList<>();
         if (arancel.getNumCuotas() != 0) {
-            List<Integer> datosCuotas = calcularDatosCuotas(rut);
+            ArrayList<Integer> datosCuotas = calcularDatosCuotas(rut);
             datosArancel.add(datosCuotas.get(0)); // Monto pagado
             datosArancel.add(arancel.getMonto() - datosArancel.get(0)); // Monto por pagar
             datosArancel.add(datosCuotas.get(1)); // N cuotas pagadas
             datosArancel.add(datosCuotas.get(2)); // N cuotas atrasadas
+            return datosArancel;
         }
-        return datosArancel;
+        return null;
     }
 
-    public List<Integer> calcularDatosCuotas(String rut) {
-        List<Cuota> cuotas = buscarCuotas(rut);
-        List<Integer> cuotasPagadas = new ArrayList<>(List.of(0, 0, 0));
-
+    public ArrayList<Integer> calcularDatosCuotas(String rut) {
+        ArrayList<Cuota> cuotas = buscarCuotas(rut);
+        ArrayList<Integer> cuotasPagadas = new ArrayList<>();
+        cuotasPagadas.add(0); // Monto pagado
+        cuotasPagadas.add(0); // Numero de cuotas pagadas
+        cuotasPagadas.add(0); // Numero cuotas atrasadas
         for (Cuota c : cuotas) {
             if (c.getPagado()) {
                 cuotasPagadas.set(0, cuotasPagadas.get(0) + (int) (c.getMonto() * (1 + c.getInteres() - c.getDescuento())));
@@ -133,23 +134,22 @@ public class ArancelService {
     public void calcularDescuentoArancel(Integer mesExamen, String rut, Float promedio) {
         Cuota cuotaMes = null;
         float descuento = 0;
-        List<Cuota> cuotas = buscarCuotas(rut);
-
+        ArrayList<Cuota> cuotas = buscarCuotas(rut);
         for (Cuota c : cuotas) {
             if (Integer.parseInt(c.getFechaExp().split("-")[1]) == mesExamen + 1) {
                 cuotaMes = c;
             }
         }
-
-        if (cuotaMes != null && !cuotaMes.getPagado()) {
+        assert cuotaMes != null;
+        if (!cuotaMes.getPagado()) {
             if (promedio >= 950 && promedio <= 1000) {
                 descuento = 0.1f;
-            } else if (promedio >= 900) {
+            } else if (promedio >= 900 && promedio <= 949) {
                 descuento = 0.05f;
-            } else if (promedio >= 850) {
+            } else if (promedio >= 850 && promedio <= 899) {
                 descuento = 0.02f;
             }
-            cuotaService.calcularDescuentoCuota(cuotaMes, descuento);
         }
+        cuotaService.calcularDescuentoCuota(cuotaMes, descuento);
     }
 }

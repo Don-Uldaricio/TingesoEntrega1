@@ -3,21 +3,19 @@ package com.tingeso.entrega1.services;
 import com.tingeso.entrega1.entities.Arancel;
 import com.tingeso.entrega1.entities.Cuota;
 import com.tingeso.entrega1.repositories.CuotaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class CuotaService {
-
-    private final CuotaRepository cuotaRepository;
-
-    public CuotaService(CuotaRepository cuotaRepository) {
-        this.cuotaRepository = cuotaRepository;
-    }
+    @Autowired
+    CuotaRepository cuotaRepository;
 
     public Cuota buscarCuotaPorId(Integer idCuota) {
         return cuotaRepository.findById(idCuota);
@@ -27,7 +25,6 @@ public class CuotaService {
         cuotaRepository.save(c);
     }
 
-    // Método invocado por ArancelService que se encarga de crear las cuotas
     public void crearCuotas(Arancel arancel) {
         int valorCuota = arancel.getMonto() / arancel.getNumCuotas();
         for (int i = 0; i < arancel.getNumCuotas(); i++) {
@@ -48,12 +45,12 @@ public class CuotaService {
         }
     }
 
-    public List<Cuota> buscarCuotasPorRut(String rut) {
+    public ArrayList<Cuota> buscarCuotasPorRut(String rut) {
         return cuotaRepository.findByRutEstudiante(rut);
     }
 
-    public List<Cuota> listarCuotas(Long idArancel) {
-        List<Cuota> cuotas = new ArrayList<>();
+    public ArrayList<Cuota> listarCuotas(Long idArancel) {
+        ArrayList<Cuota> cuotas = new ArrayList<>();
         for (Cuota c : cuotaRepository.findAll()) {
             if (Objects.equals(c.getIdArancel(), idArancel)) {
                 cuotas.add(c);
@@ -68,7 +65,7 @@ public class CuotaService {
         return c;
     }
 
-    public void actualizarCuotas(List<Cuota> cuotas) {
+    public void actualizarCuotas(ArrayList<Cuota> cuotas) {
         for (Cuota c : cuotas) {
             if (!c.getPagado()) {
                 calcularAtrasoCuota(c);
