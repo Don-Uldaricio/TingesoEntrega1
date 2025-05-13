@@ -4,7 +4,8 @@ import com.tingeso.entrega1.entities.Estudiante;
 import com.tingeso.entrega1.repositories.EstudianteRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,8 +18,13 @@ import java.util.List;
 @Service
 public class AsistenciaService {
 
-    @Autowired
-    private EstudianteRepository estudianteRepository;
+    private final EstudianteRepository estudianteRepository;
+    private static final Logger logger = LoggerFactory.getLogger(AsistenciaService.class);
+    private static final String PREFIX_FILA = "Fila ";
+
+    public AsistenciaService(EstudianteRepository estudianteRepository) {
+        this.estudianteRepository = estudianteRepository;
+    }
 
     public boolean importarAsistencia(MultipartFile file) {
         if (isExcelFile(file)) {
@@ -27,7 +33,7 @@ public class AsistenciaService {
                 guardarAsistencia(asistenciaList);
                 return true;
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error al procesar el archivo Excel", e);
                 return false;
             }
         }
@@ -52,41 +58,37 @@ public class AsistenciaService {
 
     private List<AsistenciaData> procesarExcel(InputStream inputStream) throws IOException {
         List<AsistenciaData> asistenciaDataList = new ArrayList<>();
-        System.out.println("Iniciando procesamiento del Excel");
+        logger.info("Iniciando procesamiento del Excel");
 
         try (Workbook workbook = WorkbookFactory.create(inputStream)) {
-            System.out.println("Workbook creado correctamente");
+            logger.info("Workbook creado correctamente");
             Sheet sheet = workbook.getSheetAt(0);
-            System.out.println("Número de filas en la hoja: " + sheet.getPhysicalNumberOfRows());
+            logger.info("Número de filas en la hoja: {}", sheet.getPhysicalNumberOfRows());
 
-            // Procesamos cada fila como un estudiante diferente
             for (int rowIndex = 0; rowIndex < sheet.getPhysicalNumberOfRows(); rowIndex++) {
                 Row currentRow = sheet.getRow(rowIndex);
-                System.out.println("\n==== Procesando fila " + rowIndex + " (estudiante) ====");
+                logger.info("\n==== {}{} (estudiante) ====", PREFIX_FILA, rowIndex);
 
                 if (currentRow == null) {
-                    System.out.println("Fila " + rowIndex + " es nula, saltando");
+                    logger.warn("{}{} es nula, saltando", PREFIX_FILA, rowIndex);
                     continue;
                 }
 
                 Cell rutCell = currentRow.getCell(0);
-                System.out.println("Celda 0 (RUT) es null? " + (rutCell == null));
+                logger.debug("Celda 0 (RUT) es null? {}", rutCell == null);
 
-                // Verificamos que la celda del RUT no sea nula
                 if (rutCell == null) {
-                    System.out.println("Fila " + rowIndex + ": Celda de RUT es nula, saltando fila");
+                    logger.warn("{}{}: Celda de RUT es nula, saltando fila", PREFIX_FILA, rowIndex);
                     continue;
                 }
 
-                // Mostramos el tipo de la celda del RUT
-                System.out.println("Tipo de celda de RUT: " + rutCell.getCellType());
+                logger.debug("Tipo de celda de RUT: {}", rutCell.getCellType());
 
-                // Extraemos el RUT manejando diferentes tipos de celda
                 String rut = obtenerValorCelda(rutCell);
-                System.out.println("RUT obtenido: " + rut);
+                logger.info("RUT obtenido: {}", rut);
 
                 if (rut.isEmpty()) {
-                    System.out.println("Fila " + rowIndex + ": RUT está vacío, saltando fila");
+                    logger.warn("{}{}: RUT está vacío, saltando fila", PREFIX_FILA, rowIndex);
                     continue;
                 }
 
@@ -94,45 +96,43 @@ public class AsistenciaService {
                 asistenciaData.setRut(rut);
                 asistenciaData.setAsistenciaMensual(new ArrayList<>());
 
-                System.out.println("Procesando datos de asistencia para RUT: " + rut);
-                // Procesamos las 12 columnas de asistencia (columnas 1-12)
+                logger.info("Procesando datos de asistencia para RUT: {}", rut);
+
                 for (int colIndex = 1; colIndex <= 12; colIndex++) {
                     Cell cell = currentRow.getCell(colIndex);
                     float porcentaje = 0.0f;
-                    System.out.print("Columna " + colIndex + ": ");
+                    logger.debug("Columna {}: ", colIndex);
 
                     if (cell != null) {
-                        System.out.print("Tipo=" + cell.getCellType() + ", ");
                         try {
                             if (cell.getCellType() == CellType.NUMERIC) {
                                 porcentaje = (float) cell.getNumericCellValue();
-                                System.out.print("Valor numérico=" + porcentaje);
+                                logger.debug("Valor numérico={}", porcentaje);
                             } else if (cell.getCellType() == CellType.STRING) {
                                 String valor = cell.getStringCellValue().trim().replace(',', '.');
                                 porcentaje = Float.parseFloat(valor);
-                                System.out.print("Valor string=" + valor + ", convertido a=" + porcentaje);
+                                logger.debug("Valor string='{}', convertido a={}", valor, porcentaje);
                             } else {
-                                System.out.print("Tipo no procesable");
+                                logger.debug("Tipo no procesable");
                             }
                         } catch (Exception e) {
-                            // Si hay un error, asumimos 0
-                            System.out.print("ERROR al obtener valor: " + e.getMessage());
+                            logger.warn("Error al obtener valor: {}", e.getMessage());
                             porcentaje = 0.0f;
                         }
                     } else {
-                        System.out.print("Celda nula");
+                        logger.debug("Celda nula");
                     }
-                    System.out.println(" -> Porcentaje final=" + porcentaje);
+                    logger.debug("Porcentaje final={}", porcentaje);
                     asistenciaData.getAsistenciaMensual().add(porcentaje);
                 }
 
-                System.out.println("Lista de asistencia para RUT " + rut + ": " + asistenciaData.getAsistenciaMensual());
+                logger.info("Lista de asistencia para RUT {}: {}", rut, asistenciaData.getAsistenciaMensual());
                 asistenciaDataList.add(asistenciaData);
             }
         }
 
-        System.out.println("Fin del procesamiento del Excel");
-        System.out.println("Total de registros de asistencia procesados: " + asistenciaDataList.size());
+        logger.info("Fin del procesamiento del Excel");
+        logger.info("Total de registros de asistencia procesados: {}", asistenciaDataList.size());
         return asistenciaDataList;
     }
 
@@ -145,17 +145,11 @@ public class AsistenciaService {
             case STRING:
                 return cell.getStringCellValue().trim();
             case NUMERIC:
-                // Para números, usamos el formato bruto para evitar notación científica
                 if (DateUtil.isCellDateFormatted(cell)) {
                     return cell.getLocalDateTimeCellValue().toString();
                 } else {
                     double valor = cell.getNumericCellValue();
-                    // Si es un entero, quitar la parte decimal
-                    if (valor == Math.floor(valor)) {
-                        return String.format("%.0f", valor);
-                    } else {
-                        return String.valueOf(valor);
-                    }
+                    return (valor == Math.floor(valor)) ? String.format("%.0f", valor) : String.valueOf(valor);
                 }
             case BOOLEAN:
                 return Boolean.toString(cell.getBooleanCellValue());
@@ -179,26 +173,20 @@ public class AsistenciaService {
             Estudiante estudiante = estudianteRepository.findByRut(asistenciaData.getRut());
 
             if (estudiante != null) {
-                // Limpiamos cualquier dato previo de asistencia
                 estudiante.getAsistenciaMensual().clear();
-
-                // Agregamos los nuevos datos de asistencia
                 estudiante.getAsistenciaMensual().addAll(asistenciaData.getAsistenciaMensual());
 
-                // Aseguramos que la lista tenga exactamente 12 elementos
                 while (estudiante.getAsistenciaMensual().size() < 12) {
                     estudiante.getAsistenciaMensual().add(0.0f);
                 }
 
-                // Guardamos el estudiante actualizado
                 estudianteRepository.save(estudiante);
 
-                // Registrar en el log para depuración
-                System.out.println("Asistencia guardada para el estudiante con RUT: " + asistenciaData.getRut());
-                System.out.println("Número de valores de asistencia: " + estudiante.getAsistenciaMensual().size());
-                System.out.println("Valores de asistencia: " + estudiante.getAsistenciaMensual());
+                logger.info("Asistencia guardada para el estudiante con RUT: {}", asistenciaData.getRut());
+                logger.info("Número de valores de asistencia: {}", estudiante.getAsistenciaMensual().size());
+                logger.info("Valores de asistencia: {}", estudiante.getAsistenciaMensual());
             } else {
-                System.out.println("No se encontró estudiante con RUT: " + asistenciaData.getRut());
+                logger.warn("No se encontró estudiante con RUT: {}", asistenciaData.getRut());
             }
         }
     }

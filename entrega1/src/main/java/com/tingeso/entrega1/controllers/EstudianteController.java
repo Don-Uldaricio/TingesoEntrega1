@@ -2,32 +2,30 @@ package com.tingeso.entrega1.controllers;
 
 import com.tingeso.entrega1.entities.Arancel;
 import com.tingeso.entrega1.entities.Cuota;
+import com.tingeso.entrega1.entities.Estudiante;
 import com.tingeso.entrega1.services.EstudianteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.tingeso.entrega1.entities.Estudiante;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Controller
 @RequestMapping
 public class EstudianteController {
-    @Autowired
-    private EstudianteService estudianteService;
+
+    private final EstudianteService estudianteService;
+
+    public EstudianteController(EstudianteService estudianteService) {
+        this.estudianteService = estudianteService;
+    }
 
     @GetMapping("/ingresoEstudiante")
     public String mostrarIngresoEstudiantes(Model model) {
         Estudiante e = new Estudiante();
         model.addAttribute("Estudiante", e);
         return "ingresoEstudiante";
-
     }
 
     @GetMapping("/cuotaEstudiante")
@@ -49,7 +47,6 @@ public class EstudianteController {
         return "cuotaEstudiante";
     }
 
-    // En tu controlador
     @PostMapping("/guardarEstudiante")
     public String guardarEstudiante(@ModelAttribute Estudiante estudiante) {
         estudianteService.guardarEstudiante(estudiante);
@@ -72,6 +69,3 @@ public class EstudianteController {
     @GetMapping("/importarNotas")
     public String vistaImportarNotas() {
         return "importarNotas";
-    }
-
-}

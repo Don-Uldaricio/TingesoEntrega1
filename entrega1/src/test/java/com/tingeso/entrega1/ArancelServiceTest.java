@@ -10,7 +10,6 @@ import com.tingeso.entrega1.services.ArancelService;
 import com.tingeso.entrega1.services.CuotaService;
 import com.tingeso.entrega1.services.EstudianteService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class ArancelServiceTest {
+class ArancelServiceTest {
 
     @Autowired
     private ArancelService arancelService;
@@ -45,7 +44,7 @@ public class ArancelServiceTest {
     EstudianteRepository estudianteRepository;
 
     @Test
-    public void testCrearArancel() {
+    void testCrearArancel() {
         // Setup
         Estudiante estudiante = new Estudiante();
         estudiante.setRut("12345678-9");
@@ -61,7 +60,7 @@ public class ArancelServiceTest {
     }
 
     @Test
-    public void testDiferenciaFechaActual() {
+    void testDiferenciaFechaActual() {
         int fecha = 2020;
         int expectedDifference = LocalDate.now().getYear() - fecha;
 
@@ -70,7 +69,7 @@ public class ArancelServiceTest {
     }
 
     @Test
-    public void testCalcularDescuento_Municipal() {
+    void testCalcularDescuento_Municipal() {
         String tipoColegio = "Municipal";
         int aniosEgreso = 3;
 
@@ -82,7 +81,7 @@ public class ArancelServiceTest {
     }
 
     @Test
-    public void testBuscarCuotas() {
+    void testBuscarCuotas() {
         String rut = "12";
         ArrayList<Cuota> cuotas = new ArrayList<>();
         when(cuotaService.buscarCuotasPorRut(rut)).thenReturn(cuotas);
@@ -92,7 +91,7 @@ public class ArancelServiceTest {
     }
 
     @Test
-    public void testBuscarPorRut() {
+    void testBuscarPorRut() {
         String rut = "12";
         Arancel arancel = new Arancel();
         when(arancelRepository.findByRut(rut)).thenReturn(arancel);
@@ -102,7 +101,7 @@ public class ArancelServiceTest {
     }
 
     @Test
-    public void testActualizarArancel() {
+    void testActualizarArancel() {
         // Configura tus objetos de prueba
         String rut = "1234567890";
         Arancel arancel = new Arancel();
