@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class ArancelServiceTest {
+public class ArancelServiceTest {
 
     @Autowired
     private ArancelService arancelService;
@@ -44,7 +44,7 @@ class ArancelServiceTest {
     EstudianteRepository estudianteRepository;
 
     @Test
-    void testCrearArancel() {
+    public void testCrearArancel() {
         // Setup
         Estudiante estudiante = new Estudiante();
         estudiante.setRut("12345678-9");
@@ -60,7 +60,7 @@ class ArancelServiceTest {
     }
 
     @Test
-    void testDiferenciaFechaActual() {
+    public void testDiferenciaFechaActual() {
         int fecha = 2020;
         int expectedDifference = LocalDate.now().getYear() - fecha;
 
@@ -69,7 +69,7 @@ class ArancelServiceTest {
     }
 
     @Test
-    void testCalcularDescuento_Municipal() {
+    public void testCalcularDescuento_Municipal() {
         String tipoColegio = "Municipal";
         int aniosEgreso = 3;
 
@@ -81,7 +81,7 @@ class ArancelServiceTest {
     }
 
     @Test
-    void testBuscarCuotas() {
+    public void testBuscarCuotas() {
         String rut = "12";
         ArrayList<Cuota> cuotas = new ArrayList<>();
         when(cuotaService.buscarCuotasPorRut(rut)).thenReturn(cuotas);
@@ -91,7 +91,7 @@ class ArancelServiceTest {
     }
 
     @Test
-    void testBuscarPorRut() {
+    public void testBuscarPorRut() {
         String rut = "12";
         Arancel arancel = new Arancel();
         when(arancelRepository.findByRut(rut)).thenReturn(arancel);
@@ -101,7 +101,7 @@ class ArancelServiceTest {
     }
 
     @Test
-    void testActualizarArancel() {
+    public void testActualizarArancel() {
         // Configura tus objetos de prueba
         String rut = "1234567890";
         Arancel arancel = new Arancel();

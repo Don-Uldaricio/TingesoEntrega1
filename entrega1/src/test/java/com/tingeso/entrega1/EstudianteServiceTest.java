@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class EstudianteServiceTest {
+public class EstudianteServiceTest {
     @Autowired
     private EstudianteService estudianteService;
 
@@ -29,7 +29,7 @@ class EstudianteServiceTest {
     private ArancelService arancelService;
 
     @Test
-    void testFindByRut() {
+    public void testFindByRut() {
         // Setup
         Estudiante estudiante = new Estudiante();
         estudiante.setRut("12345678-9");
@@ -44,7 +44,7 @@ class EstudianteServiceTest {
     }
 
     @Test
-    void testGuardarEstudiante() {
+    public void testGuardarEstudiante() {
         // Setup
         Estudiante estudiante = new Estudiante();
         estudiante.setRut("12345678-9");
@@ -67,7 +67,7 @@ class EstudianteServiceTest {
     }
 
     @Test
-    void testBuscarArancelPorRut_WithExistingStudent() {
+    public void testBuscarArancelPorRut_WithExistingStudent() {
         // Setup
         String rut = "12345678-9";
         Estudiante estudiante = new Estudiante();
@@ -86,7 +86,7 @@ class EstudianteServiceTest {
     }
 
     @Test
-    void testBuscarArancelPorRut_WithNonExistingStudent() {
+    public void testBuscarArancelPorRut_WithNonExistingStudent() {
         // Setup
         String rut = "12345678-9";
 
@@ -100,7 +100,7 @@ class EstudianteServiceTest {
     }
 
     @Test
-    void testBuscarCuotasPorRut_WithExistingStudent() {
+    public void testBuscarCuotasPorRut_WithExistingStudent() {
         // Setup
         String rut = "12345678-9";
         Estudiante estudiante = new Estudiante();
@@ -119,7 +119,7 @@ class EstudianteServiceTest {
     }
 
     @Test
-    void testBuscarCuotasPorRut_WithNonExistingStudent() {
+    public void testBuscarCuotasPorRut_WithNonExistingStudent() {
         // Setup
         String rut = "12345678-9";
 
@@ -133,7 +133,7 @@ class EstudianteServiceTest {
     }
 
     @Test
-    void testGenerarPlanilla() {
+    public void testGenerarPlanilla() {
         // Setup
         String rut = "12345678-9";
 
@@ -145,7 +145,7 @@ class EstudianteServiceTest {
     }
 
     @Test
-    void testDatosPagoArancel() {
+    public void testDatosPagoArancel() {
         // Setup
         String rut = "12345678-9";
         ArrayList<Integer> datosArancel = new ArrayList<>();
@@ -163,7 +163,7 @@ class EstudianteServiceTest {
     }
 
     @Test
-    void testCalcularDescuentoNotas() {
+    public void testCalcularDescuentoNotas() {
         // Setup
         String[] datos = {"12345678-9", "2023-05-15", "5.0"};
         Estudiante estudiante = new Estudiante();

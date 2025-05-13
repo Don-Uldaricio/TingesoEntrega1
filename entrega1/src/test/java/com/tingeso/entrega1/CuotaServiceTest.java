@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class CuotaServiceTest {
+public class CuotaServiceTest {
 
     @Autowired
     private CuotaService cuotaService;
@@ -25,7 +25,7 @@ class CuotaServiceTest {
     private CuotaRepository cuotaRepository;
 
     @Test
-    void testBuscarCuotaPorId() {
+    public void testBuscarCuotaPorId() {
         // Setup
         Integer idCuota = Integer.valueOf(1);
         Cuota cuota = new Cuota();
@@ -39,7 +39,7 @@ class CuotaServiceTest {
     }
 
     @Test
-    void testGuardarCuota() {
+    public void testGuardarCuota() {
         // Setup
         Cuota cuota = new Cuota();
 
@@ -51,7 +51,7 @@ class CuotaServiceTest {
     }
 
     @Test
-    void testCrearCuotas() {
+    public void testCrearCuotas() {
         // Setup
         Arancel arancel = new Arancel();
         arancel.setNumCuotas(Integer.valueOf(5));
@@ -65,7 +65,7 @@ class CuotaServiceTest {
     }
 
     @Test
-    void testBuscarCuotasPorRut() {
+    public void testBuscarCuotasPorRut() {
         // Setup
         String rut = "12345678-9";
         ArrayList<Cuota> cuotas = new ArrayList<>();
@@ -79,7 +79,7 @@ class CuotaServiceTest {
     }
 
     @Test
-    void testListarCuotas() {
+    public void testListarCuotas() {
         // Setup
         Long idArancel = Long.valueOf(1);
         ArrayList<Cuota> cuotas = new ArrayList<>();
@@ -93,7 +93,7 @@ class CuotaServiceTest {
     }
 
     @Test
-    void testPagarCuota() {
+    public void testPagarCuota() {
         // Setup
         Cuota cuota = new Cuota();
         cuota.setPagado(Boolean.FALSE);
@@ -107,7 +107,7 @@ class CuotaServiceTest {
     }
 
     @Test
-    void testActualizarCuotas() {
+    public void testActualizarCuotas() {
         // Setup
         ArrayList<Cuota> cuotas = new ArrayList<>();
         Cuota cuota1 = new Cuota();
@@ -127,7 +127,7 @@ class CuotaServiceTest {
     }
 
     @Test
-    void testCalcularAtrasoCuota() {
+    public void testCalcularAtrasoCuota() {
         // Setup
         Cuota cuota = new Cuota();
         cuota.setFechaExp(String.valueOf(LocalDate.now().minusMonths(3)));  // Establecemos una fecha de expiración 3 meses atrás
@@ -141,7 +141,7 @@ class CuotaServiceTest {
     }
 
     @Test
-    void testCalcularMesesAtraso() {
+    public void testCalcularMesesAtraso() {
         // Setup
         Cuota cuota = new Cuota();
         cuota.setFechaExp(String.valueOf(LocalDate.now().minusMonths(2)));  // Establecemos una fecha de expiración 2 meses atrás
@@ -154,7 +154,7 @@ class CuotaServiceTest {
     }
 
     @Test
-    void testCalcularDescuentoCuota() {
+    public void testCalcularDescuentoCuota() {
         // Setup
         Cuota cuota = new Cuota();
         cuota.setMonto(Integer.valueOf(1000));
