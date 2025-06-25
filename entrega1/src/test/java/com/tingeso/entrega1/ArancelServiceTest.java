@@ -78,7 +78,7 @@ public class ArancelServiceTest {
         df.setRoundingMode(RoundingMode.DOWN);
 
         float result = arancelService.calcularDescuento(tipoColegio, aniosEgreso);
-        assertEquals("0.24", df.format(result));  // Basado en la lógica del método
+        assertEquals("0,24", df.format(result));  // Basado en la lógica del método
     }
 
     @Test
