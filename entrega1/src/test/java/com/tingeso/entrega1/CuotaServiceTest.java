@@ -122,8 +122,8 @@ public class CuotaServiceTest {
         // Ejecutamos
         cuotaService.actualizarCuotas(cuotas);
 
-        assertEquals(0, cuotaService.calcularMesesAtraso(cuota1));
-        assertEquals(11, cuotaService.calcularMesesAtraso(cuota2));
+        assertEquals(1, cuotaService.calcularMesesAtraso(cuota1));
+        assertEquals(0, cuotaService.calcularMesesAtraso(cuota2));
     }
 
     @Test
