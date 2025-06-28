@@ -59,7 +59,7 @@ services:
     environment:
       - PASSWORD=admin_openvas  # Establece la contraseña
     volumes:
-      - openvas:/data  # Volumen persistente para los datos de OpenVAS
+      - openvas_data:/data  # Volumen persistente para los datos de OpenVAS
     restart: always  # Asegura que el contenedor se reinicie si se detiene
     networks:
       - default
