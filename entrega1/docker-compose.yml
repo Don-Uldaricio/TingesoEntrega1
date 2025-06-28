@@ -53,7 +53,7 @@ services:
       - db
   openvas:
     image: immauss/openvas
-    container_name: openvas
+    container_name: openvas_jenkins
     ports:
       - "8090:9392"  # Mapea el puerto 9392 en el contenedor al puerto 8090 en la máquina host
     environment:
