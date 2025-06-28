@@ -21,7 +21,7 @@ services:
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: tingeso1
     ports:
-      - "5433:5432"
+      - "5434:5432"
 
   app1:
     container_name: tingeso-entrega1-1
@@ -51,3 +51,19 @@ services:
         condition: on-failure
     depends_on:
       - db
+  openvas:
+    image: immauss/openvas
+    container_name: openvas
+    ports:
+      - "8090:9392"  # Mapea el puerto 9392 en el contenedor al puerto 8090 en la máquina host
+    environment:
+      - PASSWORD=admin_openvas  # Establece la contraseña
+    volumes:
+      - openvas:/data  # Volumen persistente para los datos de OpenVAS
+    restart: always  # Asegura que el contenedor se reinicie si se detiene
+    networks:
+      - default
+
+  volumes:
+    openvas:  # Volumen persistente que se mantiene entre reinicios del contenedor
+
