@@ -64,6 +64,6 @@ services:
     networks:
       - default
 
-  volumes:
-    openvas:  # Volumen persistente que se mantiene entre reinicios del contenedor
+volumes:
+  openvas_data:  # Volumen persistente que se mantiene entre reinicios del contenedor
 
